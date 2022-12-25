@@ -3,8 +3,8 @@ This project represents server that connect players and displays PieChart repres
 
 It contians only 2 screens: 
 
-        - Splash 
-        + Home with 2 modes
+        1- Splash 
+        2- Home with 2 modes
 
 
 # Mode Off
