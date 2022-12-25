@@ -23,17 +23,17 @@ public class SplashBase extends AnchorPane {
         setPrefWidth(1280.0);
         setStyle("-fx-background-color: linear-gradient(to bottom, #1E595C, #3BB2B8);");
 
-        logoImage.setFitHeight(410.0);
-        logoImage.setFitWidth(410.0);
-        logoImage.setLayoutX(455.0);
-        logoImage.setLayoutY(118.0);
+        logoImage.setFitHeight(451.0);
+        logoImage.setFitWidth(465.0);
+        logoImage.setLayoutX(428.0);
+        logoImage.setLayoutY(120.0);
         logoImage.setPickOnBounds(true);
         logoImage.setPreserveRatio(true);
         logoImage.setImage(new Image(getClass().getResource("/assets/images/logo.png").toExternalForm()));
 
         ticTacToeText.setFill(javafx.scene.paint.Color.valueOf("#ffdf59"));
         ticTacToeText.setLayoutX(307.0);
-        ticTacToeText.setLayoutY(670.0);
+        ticTacToeText.setLayoutY(647.0);
         ticTacToeText.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         ticTacToeText.setStrokeWidth(0.0);
         ticTacToeText.setText("TicTacToe");
@@ -45,9 +45,7 @@ public class SplashBase extends AnchorPane {
         dropShadow.setRadius(5.0);
         dropShadow.setOffsetX(-10.0);
         dropShadow.setOffsetY(10.0);
-        dropShadow.setColor(Color.color(0,0,0,.16));  
-        
-        ticTacToeText.setEffect(dropShadow);
+        dropShadow.setColor(Color.color(0,0,0,.16)); 
 
         getChildren().add(logoImage);
         getChildren().add(ticTacToeText);
