@@ -2,8 +2,9 @@
 This project represents server that connect players and displays PieChart represents the percentage of active players and offline.
 
 It contians only 2 screens: 
-        * Splash 
-        * Home with 2 modes
+
+        - Splash 
+        + Home with 2 modes
 
 
 # Mode Off
