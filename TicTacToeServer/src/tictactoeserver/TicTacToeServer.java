@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import tictactoeserver.screens.splash.SplashBase;
 
 /**
  *
@@ -19,7 +20,7 @@ public class TicTacToeServer extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+        Parent root = new SplashBase();
         
         Scene scene = new Scene(root);
         

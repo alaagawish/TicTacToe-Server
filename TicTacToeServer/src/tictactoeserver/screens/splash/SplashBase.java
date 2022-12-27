@@ -45,7 +45,9 @@ public class SplashBase extends AnchorPane {
         dropShadow.setRadius(5.0);
         dropShadow.setOffsetX(-10.0);
         dropShadow.setOffsetY(10.0);
-        dropShadow.setColor(Color.color(0,0,0,.16)); 
+        dropShadow.setColor(Color.color(0,0,0,.6)); 
+        
+        ticTacToeText.setEffect(dropShadow);
 
         getChildren().add(logoImage);
         getChildren().add(ticTacToeText);
