@@ -20,7 +20,7 @@ public class TicTacToeServer extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = new SplashBase();
+        Parent root = new SplashBase(stage);
         
         Scene scene = new Scene(root);
         
