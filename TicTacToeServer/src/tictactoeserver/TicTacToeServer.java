@@ -5,11 +5,15 @@
  */
 package tictactoeserver;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.apache.derby.jdbc.ClientDriver;
+import tictactoeserver.repository.PlayerRepository;
 import tictactoeserver.screens.splash.SplashBase;
 
 /**
@@ -20,8 +24,12 @@ public class TicTacToeServer extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = new SplashBase(stage);
         
+        PlayerRepository playerRepository = new PlayerRepository();
+        playerRepository.selectAllPlayer();
+       
+        Parent root = new SplashBase(stage);
+  
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
