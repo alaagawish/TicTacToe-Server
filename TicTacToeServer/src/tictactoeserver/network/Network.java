@@ -8,7 +8,6 @@ public class Network extends Thread {
 
     ServerSocket serverSocket;
     ConnectionHandler connectionHandler;
-    boolean hasSocket = false;
 
     public Network() {
         try {
@@ -22,7 +21,7 @@ public class Network extends Thread {
 
     public void close() throws IOException {
         stop();
-        if (hasSocket) {
+        if (ConnectionHandler.clientsVector.size() != 0) {
             connectionHandler.closeConnection();
 
         }
@@ -35,7 +34,6 @@ public class Network extends Thread {
             Socket socket;
             try {
                 socket = serverSocket.accept();
-                hasSocket = true;
                 connectionHandler = new ConnectionHandler(socket);
 
             } catch (IOException ex) {

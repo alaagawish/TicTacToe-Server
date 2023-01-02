@@ -27,6 +27,7 @@ class ConnectionHandler implements Runnable {
     List<String> messages;
     PlayerRepository playerRepository;
     boolean flag = true, noInput = true;
+    List<String> recievedMessages;
 
     public ConnectionHandler(Socket socket) {
         System.out.println(socket);
@@ -53,49 +54,62 @@ class ConnectionHandler implements Runnable {
         while (true && noInput) {
 
             try {
-                List<String> listOfMessages = (List<String>) objectInputStream.readObject();
-
-                if (listOfMessages.size() > 1 && listOfMessages.get(0).equals("Login")) {
-                    String username = listOfMessages.get(1);
-                    String password = listOfMessages.get(2);
-                    boolean flag = playerRepository.login(username, password);
-                    if (flag) {
+               System.out.println(messages);
+                    while (true) {
+                        recievedMessages = (List<String>) objectInputStream.readObject();
+                        if (recievedMessages.size() > 0) {
+                            break;
+                        }
+                    }
+                System.out.println("receive");
+                System.out.println(recievedMessages);
+                if (recievedMessages.size() > 0 && recievedMessages.get(0).equals("Login")) {
+                    String username = recievedMessages.get(1);
+                    String password = recievedMessages.get(2);
+                   
+                    if (playerRepository.login(username, password)) {
                         messages.add("Login");
                         messages.add("Login Successfully");
                         System.out.println("successed");
-                        objectOutputStream.writeObject(messages);
+//                        objectOutputStream.writeObject(messages);
                     } else {
                         messages.add("Login");
                         messages.add("Login failed");
                         System.out.println("failed");
-                        objectOutputStream.writeObject(messages);
+//                        objectOutputStream.writeObject(messages);
                     }
-                    listOfMessages.clear();
-                    messages.clear();
-                    messages.add("finish");
                     objectOutputStream.writeObject(messages);
+                    messages.clear();
+                    
+                    recievedMessages.clear();
+//                    messages.add("finish");
+//                    messages.add("finish");
+//                    objectOutputStream.writeObject(messages);
+//                    objectOutputStream.writeObject(messages);
 
-                } else if (listOfMessages.size() > 1 && listOfMessages.get(0).equals("close")) {
+                } else if (recievedMessages.size() > 1 && recievedMessages.get(0).equals("close")) {
                     flag = false;
+                }else{
+                    System.out.println("no  ");
                 }
             } catch (IOException ex) {
                 Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
-            for (ConnectionHandler client : clientsVector) {
-                if (!client.flag) {
-                    unavailableClients.add(client);
-                }
-
-            }
-            for (ConnectionHandler client : unavailableClients) {
-                clientsVector.remove(client);
-                if (clientsVector.size() == 0) {
-                    noInput = false;
-                }
-
-            }
+//            for (ConnectionHandler client : clientsVector) {
+//                if (!client.flag) {
+//                    unavailableClients.add(client);
+//                }
+//
+//            }
+//            for (ConnectionHandler client : unavailableClients) {
+//                clientsVector.remove(client);
+//                if (clientsVector.size() == 0) {
+//                    noInput = false;
+//                }
+//
+//            }
         }
 
     }
