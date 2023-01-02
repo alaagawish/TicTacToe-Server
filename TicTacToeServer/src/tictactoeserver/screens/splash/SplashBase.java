@@ -1,10 +1,6 @@
 package tictactoeserver.screens.splash;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.effect.DropShadow;
@@ -50,31 +46,29 @@ public class SplashBase extends AnchorPane {
         ticTacToeText.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
         ticTacToeText.setWrappingWidth(724.13671875);
         ticTacToeText.setFont(new Font("Comic Sans MS Bold", 96.0));
-        
+
         DropShadow dropShadow = new DropShadow();
         dropShadow.setRadius(5.0);
         dropShadow.setOffsetX(-10.0);
         dropShadow.setOffsetY(10.0);
-        dropShadow.setColor(Color.color(0,0,0,.6)); 
-        
+        dropShadow.setColor(Color.color(0, 0, 0, .6));
+
         ticTacToeText.setEffect(dropShadow);
 
         getChildren().add(logoImage);
         getChildren().add(ticTacToeText);
-        
+
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(3), this);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
         fadeIn.setCycleCount(1);
-        
+
         fadeIn.play();
-        
+
         fadeIn.setOnFinished((e) -> {
             Parent pane = new HomeScreenBase();
-            Scene scene = new Scene( pane );
-            stage.setScene(scene);
+            stage.getScene().setRoot(pane);
         });
-
 
     }
 }
