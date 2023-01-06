@@ -1,24 +1,28 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tictactoeserver.models;
 
-/**
- *
- * @author moazk
- */
 public class Player {
-    
-    int id;
-    String playerName;
+
+    private String username;
+    private String password;
     String ipAddress;
     String status;
-    String password;
     int score;
+    int id;
+    
+    public Player(String username, String password) {
 
-    public Player() {}
+        this.username = username;
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+
+        this.username = username;
+
 
     public int getId() {
         return id;
@@ -28,13 +32,6 @@ public class Player {
         this.id = id;
     }
 
-    public String getPlayerName() {
-        return playerName;
-    }
-
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
-    }
 
     public String getIpAddress() {
         return ipAddress;
@@ -57,6 +54,7 @@ public class Player {
     }
 
     public void setPassword(String password) {
+
         this.password = password;
     }
 
@@ -70,6 +68,8 @@ public class Player {
 
     @Override
     public String toString() {
-        return "Player{" + "id=" + id + ", playerName=" + playerName + ", ipAddress=" + ipAddress + ", status=" + status + ", password=" + password + ", score=" + score + '}';
+//               return "Player{" + "id=" + id + ", playerName=" + playerName + ", ipAddress=" + ipAddress + ", status=" + status + ", password=" + password + ", score=" + score + '}';
+        return "Player{"  + ", username=" + username + ", password=" + password +  '}';
+
     }
 }

@@ -1,30 +1,51 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tictactoeserver.network;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/**
- *
- * @author moazk
- */
-public class Network {
+public class Network extends Thread {
+
     ServerSocket serverSocket;
-    
-    public Network() throws IOException{
-        serverSocket = new ServerSocket(5005);
-        
-        while(true)
-        {
-            System.err.println("Hello Server");
-            Socket s = serverSocket.accept();
-            new ConnectionHandler(s);
+    ConnectionHandler connectionHandler;
+    Socket socket;
+
+    public Network() {
+        try {
+            serverSocket = new ServerSocket(5005);
+            start();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
-    
+
+    public void close() {
+        try {
+            stop();
+            if (ConnectionHandler.clientsVector.size() != 0) {
+                connectionHandler.closeConnection();
+
+            }
+            serverSocket.close();
+            socket.close();
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+
+            try {
+                socket = serverSocket.accept();
+                connectionHandler = new ConnectionHandler(socket);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 }
