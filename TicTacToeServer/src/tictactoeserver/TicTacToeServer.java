@@ -33,5 +33,7 @@ public class TicTacToeServer extends Application {
 
     public static void main(String[] args) throws IOException {
         launch(args);
+        //new Network();
+        
     }
 }

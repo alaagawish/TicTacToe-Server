@@ -4,7 +4,11 @@ public class Player {
 
     private String username;
     private String password;
-
+    String ipAddress;
+    String status;
+    int score;
+    int id;
+    
     public Player(String username, String password) {
 
         this.username = username;
@@ -19,6 +23,30 @@ public class Player {
 
         this.username = username;
 
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getPassword() {
@@ -28,12 +56,19 @@ public class Player {
     public void setPassword(String password) {
 
         this.password = password;
+    }
 
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     @Override
     public String toString() {
-//        return "Player{" + "id=" + id + ", playerName=" + playerName + ", ipAddress=" + ipAddress + ", status=" + status + ", password=" + password + ", score=" + score + '}';
+//               return "Player{" + "id=" + id + ", playerName=" + playerName + ", ipAddress=" + ipAddress + ", status=" + status + ", password=" + password + ", score=" + score + '}';
         return "Player{"  + ", username=" + username + ", password=" + password +  '}';
 
     }

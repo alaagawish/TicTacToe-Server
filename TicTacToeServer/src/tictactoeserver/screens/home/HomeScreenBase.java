@@ -1,11 +1,16 @@
 package tictactoeserver.screens.home;
 
+import javafx.beans.binding.Binding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class HomeScreenBase extends AnchorPane {
@@ -34,6 +39,7 @@ public class HomeScreenBase extends AnchorPane {
 
         ObservableList<PieChart.Data> pieChartList = initPieChartData();
         pieChart = new PieChart(pieChartList);
+        Label percentageLabel = showPercentage(pieChart);
         pieChart.setLayoutX(298.0);
         pieChart.setLayoutY(147.0);
         pieChart.setPrefHeight(619.0);
@@ -45,8 +51,7 @@ public class HomeScreenBase extends AnchorPane {
         pieChart.setLegendVisible(true);
         pieChart.setLegendSide(Side.BOTTOM);
 
-        getChildren().add(saveButton);
-        getChildren().add(pieChart);
+        getChildren().addAll(saveButton, pieChart, percentageLabel);
 
     }
 
@@ -58,5 +63,27 @@ public class HomeScreenBase extends AnchorPane {
         );
 
         return pieChartData;
+    }
+
+    private Label showPercentage(PieChart pc) {
+        final Label caption = new Label("");
+        caption.setTextFill(Color.BLACK);
+        caption.setFont(new Font("Comic Sans MS", 50.0));
+
+        for (final PieChart.Data data : pc.getData()) {
+            data.getNode().addEventHandler(MouseEvent.MOUSE_PRESSED,
+                    e -> {
+                        double total = 0;
+                        for (PieChart.Data d : pc.getData()) {
+                            total += d.getPieValue();
+                        }
+                        caption.setTranslateX(e.getSceneX());
+                        caption.setTranslateY(e.getSceneY());
+                        String text = String.format("%.1f%%", 100 * data.getPieValue() / total);
+                        caption.setText(text);
+                    }
+            );
+        }
+        return caption;
     }
 }
