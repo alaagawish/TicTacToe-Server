@@ -39,7 +39,7 @@ public class PlayerRepository {
             resultSet.next();
 
             pw = resultSet.getString(5);
-
+            System.out.println("password: " + pw);
         } catch (SQLException ex) {
             Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
         }

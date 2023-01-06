@@ -1,55 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tictactoeserver.models;
 
-/**
- *
- * @author moazk
- */
 public class Player {
-    
-    int id;
-    String playerName;
-    String ipAddress;
-    String status;
-    String password;
-    int score;
 
-    public Player() {}
+    private String username;
+    private String password;
 
-    public int getId() {
-        return id;
+    public Player(String username, String password) {
+
+        this.username = username;
+        this.password = password;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getUsername() {
+        return username;
     }
 
-    public String getPlayerName() {
-        return playerName;
-    }
+    public void setUsername(String username) {
 
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
-    }
+        this.username = username;
 
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getPassword() {
@@ -57,19 +26,15 @@ public class Player {
     }
 
     public void setPassword(String password) {
+
         this.password = password;
-    }
 
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 
     @Override
     public String toString() {
-        return "Player{" + "id=" + id + ", playerName=" + playerName + ", ipAddress=" + ipAddress + ", status=" + status + ", password=" + password + ", score=" + score + '}';
+//        return "Player{" + "id=" + id + ", playerName=" + playerName + ", ipAddress=" + ipAddress + ", status=" + status + ", password=" + password + ", score=" + score + '}';
+        return "Player{"  + ", username=" + username + ", password=" + password +  '}';
+
     }
 }

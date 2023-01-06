@@ -1,5 +1,6 @@
 package tictactoeserver.network;
 
+import com.google.gson.Gson;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -7,6 +8,7 @@ import java.net.Socket;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import tictactoeserver.models.Message;
 import tictactoeserver.repository.PlayerRepository;
 
 class ConnectionHandler implements Runnable {
@@ -43,14 +45,17 @@ class ConnectionHandler implements Runnable {
         while (true && noInput) {
 
             try {
+
+                Gson gson = new Gson();
                 String messageReceivedFromClient = dataInputStream.readLine();
+                messageReceivedFromClient = messageReceivedFromClient.replaceAll("\r?\n", "");
                 if (messageReceivedFromClient != null) {
-                    System.out.println(messageReceivedFromClient);
 
                     if (messageReceivedFromClient.length() > 0) {
+                        Message messageReceived = new Gson().fromJson(messageReceivedFromClient, Message.class);
+
                         if (messageReceivedFromClient.equals("close")) {
                             flag = false;
-                            System.out.println("client closed ddddddddddddddddddddddddd");
 
                             for (ConnectionHandler client : unavailableClients) {
                                 if (!flag) {
@@ -61,23 +66,36 @@ class ConnectionHandler implements Runnable {
                                 }
                             }
 
-                        } else {
-                            String[] arr = messageReceivedFromClient.split(",");
-                            System.out.println(arr);
-                            String username = arr[1];
-                            String password = arr[2];
+                        } else if (messageReceived.getOperation().equals("Login")) {
+                            String username = messageReceived.getPlayers().get(0).getUsername();
+                            String password = messageReceived.getPlayers().get(0).getPassword();
                             System.out.println("username: " + username + " password:" + password);
 
                             if (playerRepository.login(username, password)) {
-                                messageSentToClient = "Login,Successfully";
+
+                                Message messageSent = new Message();
+                                messageSent.setOperation("Login");
+                                messageSent.setStatus(true);
+
+                                String messageSentToClient = gson.toJson(messageSent);
+
+                                System.out.println("msg json is " + messageSentToClient);
+                                printStream.println(messageSentToClient);
                                 System.out.println("successed");
 
                             } else {
 
-                                messageSentToClient = "Login,failed";
+                                Message messageSent = new Message();
+                                messageSent.setOperation("Login");
+                                messageSent.setStatus(false);
+
+                                String messageSentToClient = gson.toJson(messageSent);
+
+                                System.out.println("msg json is " + messageSentToClient);
+                                printStream.println(messageSentToClient);
                                 System.out.println("failed");
                             }
-                            printStream.println(messageSentToClient);
+
                         }
                     } else {
                         try {
@@ -103,7 +121,7 @@ class ConnectionHandler implements Runnable {
                         }
 
                     }
-                    messageSentToClient = null;
+//                    messageSentToClient = null;
 
                 }
             } catch (IOException ex) {
