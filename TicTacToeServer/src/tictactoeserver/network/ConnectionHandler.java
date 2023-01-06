@@ -2,13 +2,8 @@ package tictactoeserver.network;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,19 +46,16 @@ class ConnectionHandler implements Runnable {
                 String messageReceivedFromClient = dataInputStream.readLine();
                 if (messageReceivedFromClient != null) {
                     System.out.println(messageReceivedFromClient);
+
                     if (messageReceivedFromClient.length() > 0) {
                         if (messageReceivedFromClient.equals("close")) {
-//                            for (ConnectionHandler client : clientsVector) {
-//                                if (!client.flag) {
-//                                    unavailableClients.add(client);
-//
-//                                }
                             flag = false;
                             System.out.println("client closed ddddddddddddddddddddddddd");
-//                            }
 
                             for (ConnectionHandler client : unavailableClients) {
-                                clientsVector.remove(client);
+                                if (!flag) {
+                                    clientsVector.remove(client);
+                                }
                                 if (clientsVector.isEmpty()) {
                                     noInput = false;
                                 }
@@ -124,14 +116,17 @@ class ConnectionHandler implements Runnable {
     public void closeConnection() {
 
         for (ConnectionHandler client : clientsVector) {
-
+            printStream.println("close");
             try {
+                thread.sleep(100);
                 thread.stop();
                 printStream.close();
                 dataInputStream.close();
             } catch (IOException ex) {
                 ex.printStackTrace();
 
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
