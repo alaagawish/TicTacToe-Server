@@ -104,7 +104,7 @@ class ConnectionHandler implements Runnable {
                                 System.out.println("failed");
                             }
 
-                        } if (messageReceived.getOperation().equals("Edit")) {
+                        }else if (messageReceived.getOperation().equals("Edit")) {
                             username = messageReceived.getPlayers().get(0).getUsername();
                             password = messageReceived.getPlayers().get(0).getPassword();
                             System.out.println("username: " + username + " password:" + password);

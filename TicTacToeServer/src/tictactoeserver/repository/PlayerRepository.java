@@ -32,17 +32,19 @@ public class PlayerRepository {
         ResultSet resultSet;
         String pw = "";
         try {
-
+            System.out.println("new pw in player repo" + password);
             preparedStatement = repository.connection.prepareStatement("UPDATE ROOT.PLAYER SET PASSWORD=? where PLAYERNAME=?",
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
             preparedStatement.setString(1, password);
             preparedStatement.setString(2, username);
-            preparedStatement.executeUpdate();
-            System.out.println("done execute update");
+            if (preparedStatement.executeUpdate() > 0) {
 
-            player = login(username, password);
+                System.out.println("done execute update");
 
+                player = login(username, password);
+                System.out.println(player);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -66,12 +68,14 @@ public class PlayerRepository {
 
                 pw = resultSet.getString(5);
                 System.out.println("password: " + pw);
+                if (pw.equals(password)) {
+                    player.setId(resultSet.getInt("ID"));
+                    player.setUsername(resultSet.getString("PLAYERNAME"));
+                    player.setScore(resultSet.getInt("SCORE"));
+                    player.setPassword(resultSet.getString("PASSWORD"));
+                    player.setStatus(resultSet.getString("STATUS"));
+                }
 
-                player.setId(resultSet.getInt("ID"));
-                player.setUsername(resultSet.getString("PLAYERNAME"));
-                player.setScore(resultSet.getInt("SCORE"));
-                player.setPassword(resultSet.getString("PASSWORD"));
-                player.setStatus(resultSet.getString("STATUS"));
             }
 
         } catch (SQLException ex) {
