@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import tictactoeserver.models.Player;
 
 public class PlayerRepository {
 
@@ -25,29 +26,5 @@ public class PlayerRepository {
         }
     }
 
-    public boolean login(String username, String password) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-        String pw = "";
-        try {
-            preparedStatement = repository.connection.prepareStatement("select * from ROOT.PLAYER where PLAYERNAME=?",
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_READ_ONLY);
-            preparedStatement.setString(1, username);
-            resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-
-            pw = resultSet.getString(5);
-            System.out.println("password: " + pw);
-        } catch (SQLException ex) {
-            Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (pw.equals(password)) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
+    
 }

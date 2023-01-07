@@ -1,9 +1,7 @@
 package tictactoeserver.screens.home;
 
-import javafx.beans.binding.Binding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
@@ -12,30 +10,33 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import tictactoeserver.network.Network;
 
 public class HomeScreenBase extends AnchorPane {
 
-    protected final Button saveButton;
+    protected final Button startButton;
     protected final PieChart pieChart;
+    boolean flag;
+    public static Network network;
 
     public HomeScreenBase() {
 
-        saveButton = new Button();
-
+        startButton = new Button();
+        flag = false;
         setId("AnchorPane");
         setPrefHeight(800.0);
         setPrefWidth(1280.0);
         setStyle("-fx-background-color: linear-gradient(#ffffff,#E5EDEE);;");
 
-        saveButton.setLayoutX(540.0);
-        saveButton.setLayoutY(35.0);
-        saveButton.setMnemonicParsing(false);
-        saveButton.setPrefHeight(100.0);
-        saveButton.setPrefWidth(200.0);
-        saveButton.setStyle("-fx-background-color: rgba(130,213,49,0.7); -fx-background-radius: 40; -fx-effect: dropshadow( one-pass-box  , #BFBFC3 , 10 ,0.3 , -4, 4 );");
-        saveButton.setText("Start");
-        saveButton.setTextFill(javafx.scene.paint.Color.valueOf("#f8f8f8"));
-        saveButton.setFont(new Font("Comic Sans MS Bold", 45.0));
+        startButton.setLayoutX(540.0);
+        startButton.setLayoutY(35.0);
+        startButton.setMnemonicParsing(false);
+        startButton.setPrefHeight(100.0);
+        startButton.setPrefWidth(200.0);
+        startButton.setStyle("-fx-background-color: rgba(130,213,49,0.7); -fx-background-radius: 40; -fx-effect: dropshadow( one-pass-box  , #BFBFC3 , 10 ,0.3 , -4, 4 );");
+        startButton.setText("Start");
+        startButton.setTextFill(javafx.scene.paint.Color.valueOf("#f8f8f8"));
+        startButton.setFont(new Font("Comic Sans MS Bold", 45.0));
 
         ObservableList<PieChart.Data> pieChartList = initPieChartData();
         pieChart = new PieChart(pieChartList);
@@ -51,7 +52,26 @@ public class HomeScreenBase extends AnchorPane {
         pieChart.setLegendVisible(true);
         pieChart.setLegendSide(Side.BOTTOM);
 
-        getChildren().addAll(saveButton, pieChart, percentageLabel);
+        getChildren().addAll(startButton, pieChart, percentageLabel);
+        pieChart.setVisible(false);
+
+        startButton.setOnAction(e -> {
+            if (!flag) {
+                startButton.setText("Stop");
+                startButton.setStyle("-fx-background-color:  rgba(235, 59, 62,1); -fx-background-radius: 40; -fx-effect: dropshadow( one-pass-box  , #BFBFC3 , 10 ,0.3 , -4, 4 );");
+                pieChart.setVisible(true);
+                flag = true;
+                network = new Network();
+
+            } else {
+                startButton.setText("Start");
+                startButton.setStyle("-fx-background-color: rgba(130,213,49,0.7); -fx-background-radius: 40; -fx-effect: dropshadow( one-pass-box  , #BFBFC3 , 10 ,0.3 , -4, 4 );");
+                pieChart.setVisible(false);
+                flag = false;
+                network.close();
+            }
+
+        });
 
     }
 
@@ -86,4 +106,5 @@ public class HomeScreenBase extends AnchorPane {
         }
         return caption;
     }
+
 }
