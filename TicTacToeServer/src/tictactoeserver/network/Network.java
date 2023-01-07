@@ -10,7 +10,6 @@ public class Network extends Thread {
 
     ServerSocket serverSocket;
     ConnectionHandler connectionHandler;
-    Socket socket;
 
     public Network() {
         try {
@@ -30,7 +29,7 @@ public class Network extends Thread {
 
             }
             serverSocket.close();
-            socket.close();
+//            socket.close();
         } catch (IOException ex) {
             System.err.println(ex);
         }
@@ -39,6 +38,7 @@ public class Network extends Thread {
     @Override
     public void run() {
         while (true) {
+            Socket socket;
 
             try {
                 socket = serverSocket.accept();

@@ -8,7 +8,7 @@ public class Player {
     String status;
     int score;
     int id;
-    
+
     public Player(String username, String password) {
 
         this.username = username;
@@ -23,6 +23,7 @@ public class Player {
 
         this.username = username;
 
+    }
 
     public int getId() {
         return id;
@@ -31,7 +32,6 @@ public class Player {
     public void setId(int id) {
         this.id = id;
     }
-
 
     public String getIpAddress() {
         return ipAddress;
@@ -69,7 +69,7 @@ public class Player {
     @Override
     public String toString() {
 //               return "Player{" + "id=" + id + ", playerName=" + playerName + ", ipAddress=" + ipAddress + ", status=" + status + ", password=" + password + ", score=" + score + '}';
-        return "Player{"  + ", username=" + username + ", password=" + password +  '}';
+        return "Player{" + ", username=" + username + ", password=" + password + '}';
 
     }
 }

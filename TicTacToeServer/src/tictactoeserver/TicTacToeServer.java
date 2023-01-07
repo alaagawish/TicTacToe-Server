@@ -7,11 +7,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import tictactoeserver.network.Network;
 import tictactoeserver.repository.PlayerRepository;
+import tictactoeserver.screens.home.HomeScreenBase;
 import tictactoeserver.screens.splash.SplashBase;
 
 public class TicTacToeServer extends Application {
-
-    Network network;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -21,19 +20,17 @@ public class TicTacToeServer extends Application {
         Parent root = new SplashBase(stage);
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        network = new Network();
         stage.show();
 
     }
 
     @Override
-    public void stop() throws IOException {
-        network.close();
+    public void stop() {
+        HomeScreenBase.network.close();
     }
 
     public static void main(String[] args) throws IOException {
         launch(args);
-        //new Network();
-        
+
     }
 }
