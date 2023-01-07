@@ -8,11 +8,25 @@ public class Player {
     String status;
     int score;
     int id;
+    int portNum;
 
     public Player(String username, String password) {
 
         this.username = username;
         this.password = password;
+    }
+
+    public Player() {
+
+    }
+
+    public Player(String username, String password, int score, String status, int id) {
+
+        this.username = username;
+        this.password = password;
+        this.score = score;
+        this.id = id;
+        this.status = status;
     }
 
     public String getUsername() {

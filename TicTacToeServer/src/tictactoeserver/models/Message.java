@@ -1,4 +1,5 @@
 package tictactoeserver.models;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -6,8 +7,9 @@ public class Message {
 
     String operation;
     boolean status;
+    String ipAddress;
     List<Player> players;
-    
+
     public boolean isStatus() {
         return status;
     }
@@ -15,6 +17,7 @@ public class Message {
     public void setStatus(boolean status) {
         this.status = status;
     }
+
     public Message() {
         this.players = new ArrayList<>();
     }
