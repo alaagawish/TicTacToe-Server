@@ -15,6 +15,19 @@ public class Player {
         this.password = password;
     }
 
+    public Player() {
+
+    }
+
+    public Player(String username, String password, int score, String status, int id) {
+
+        this.username = username;
+        this.password = password;
+        this.score = score;
+        this.id = id;
+        this.status = status;
+    }
+
     public String getUsername() {
         return username;
     }

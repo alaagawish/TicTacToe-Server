@@ -18,21 +18,26 @@ class ConnectionHandler implements Runnable {
     DataInputStream dataInputStream;
     static Vector<ConnectionHandler> clientsVector = new Vector<ConnectionHandler>();
     static Vector<ConnectionHandler> unavailableClients = new Vector<ConnectionHandler>();
-    String messageSentToClient;
+    String messageSentToClient, messageReceivedFromClient;
     PlayerRepository playerRepository;
     boolean flag = true, noInput = true;
-    String message;
+    String message, password, username;
+    int port;
+    Gson gson;
+    Message messageSent, messageReceived;
 
     public ConnectionHandler(Socket socket) {
         System.out.println(socket);
         playerRepository = new PlayerRepository();
-
+        port = socket.getPort();
+        System.out.println("port number: " + port);
         try {
             dataInputStream = new DataInputStream(socket.getInputStream());
             printStream = new PrintStream(socket.getOutputStream());
             ConnectionHandler.clientsVector.add(this);
             System.out.println("connection build ");
             thread = new Thread(this);
+            gson = new Gson();
             thread.start();
         } catch (IOException ex) {
             System.err.println(ex.getLocalizedMessage());
@@ -46,15 +51,14 @@ class ConnectionHandler implements Runnable {
 
             try {
 
-                Gson gson = new Gson();
-                String messageReceivedFromClient = dataInputStream.readLine();
+                messageReceivedFromClient = dataInputStream.readLine();
                 messageReceivedFromClient = messageReceivedFromClient.replaceAll("\r?\n", "");
                 if (messageReceivedFromClient != null) {
-
                     if (messageReceivedFromClient.length() > 0) {
-                        Message messageReceived = new Gson().fromJson(messageReceivedFromClient, Message.class);
+                        System.out.println("messsss" + messageReceivedFromClient);
+                        messageReceived = new Gson().fromJson(messageReceivedFromClient, Message.class);
 
-                        if (messageReceivedFromClient.equals("close")) {
+                        if (messageReceived.getOperation().equalsIgnoreCase("close")) {
                             flag = false;
 
                             for (ConnectionHandler client : unavailableClients) {
@@ -64,36 +68,6 @@ class ConnectionHandler implements Runnable {
                                 if (clientsVector.isEmpty()) {
                                     noInput = false;
                                 }
-                            }
-
-                        } else if (messageReceived.getOperation().equals("Login")) {
-                            String username = messageReceived.getPlayers().get(0).getUsername();
-                            String password = messageReceived.getPlayers().get(0).getPassword();
-                            System.out.println("username: " + username + " password:" + password);
-
-                            if (playerRepository.login(username, password)) {
-
-                                Message messageSent = new Message();
-                                messageSent.setOperation("Login");
-                                messageSent.setStatus(true);
-
-                                String messageSentToClient = gson.toJson(messageSent);
-
-                                System.out.println("msg json is " + messageSentToClient);
-                                printStream.println(messageSentToClient);
-                                System.out.println("successed");
-
-                            } else {
-
-                                Message messageSent = new Message();
-                                messageSent.setOperation("Login");
-                                messageSent.setStatus(false);
-
-                                String messageSentToClient = gson.toJson(messageSent);
-
-                                System.out.println("msg json is " + messageSentToClient);
-                                printStream.println(messageSentToClient);
-                                System.out.println("failed");
                             }
 
                         }
@@ -121,7 +95,7 @@ class ConnectionHandler implements Runnable {
                         }
 
                     }
-//                    messageSentToClient = null;
+                    messageReceivedFromClient = null;
 
                 }
             } catch (IOException ex) {
@@ -134,7 +108,13 @@ class ConnectionHandler implements Runnable {
     public void closeConnection() {
 
         for (ConnectionHandler client : clientsVector) {
-            printStream.println("close");
+            gson = new Gson();
+            messageSent = new Message();
+            messageSent.setOperation("close");
+
+            messageSentToClient = gson.toJson(messageSent);
+
+            printStream.println(messageSentToClient);
             try {
                 thread.sleep(100);
                 thread.stop();
