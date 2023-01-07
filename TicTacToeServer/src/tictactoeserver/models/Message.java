@@ -37,7 +37,7 @@ public class Message {
 
     @Override
     public String toString() {
-        return " [operatio=" + operation + ", player[" + players + "]";
+        return " [operation=" + operation + ", player[" + players + "]";
     }
 
 }
