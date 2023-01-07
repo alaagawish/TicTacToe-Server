@@ -9,6 +9,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tictactoeserver.models.Message;
+import tictactoeserver.models.Player;
 import tictactoeserver.repository.PlayerRepository;
 
 class ConnectionHandler implements Runnable {
@@ -68,6 +69,72 @@ class ConnectionHandler implements Runnable {
                                 if (clientsVector.isEmpty()) {
                                     noInput = false;
                                 }
+                            }
+
+                        } else if (messageReceived.getOperation().equals("Login")) {
+                            username = messageReceived.getPlayers().get(0).getUsername();
+                            password = messageReceived.getPlayers().get(0).getPassword();
+                            System.out.println("username: " + username + " password:" + password);
+
+                            if (playerRepository.login(username, password) != null) {
+
+                                Message messageSent = new Message();
+                                messageSent.setOperation("Login");
+                                messageSent.setStatus(true);
+
+                                Player player = playerRepository.login(username, password);
+
+                                String playerToString = gson.toJson(player);
+                                messageSent.setPlayers(player);
+                                messageSentToClient = gson.toJson(messageSent);
+                                System.out.println("msg json is " + messageSentToClient);
+                                printStream.println(messageSentToClient);
+                                System.out.println("successed");
+
+                            } else {
+
+                                messageSent = new Message();
+                                messageSent.setOperation("Login");
+                                messageSent.setStatus(false);
+
+                                messageSentToClient = gson.toJson(messageSent);
+
+                                System.out.println("msg json is " + messageSentToClient);
+                                printStream.println(messageSentToClient);
+                                System.out.println("failed");
+                            }
+
+                        } if (messageReceived.getOperation().equals("Edit")) {
+                            username = messageReceived.getPlayers().get(0).getUsername();
+                            password = messageReceived.getPlayers().get(0).getPassword();
+                            System.out.println("username: " + username + " password:" + password);
+
+                            if (playerRepository.editPassword(username, password) != null) {
+
+                                Message messageSent = new Message();
+                                messageSent.setOperation("Edit");
+                                messageSent.setStatus(true);
+
+                                Player player = playerRepository.login(username, password);
+
+                                String playerToString = gson.toJson(player);
+                                messageSent.setPlayers(player);
+                                messageSentToClient = gson.toJson(messageSent);
+                                System.out.println("msg json is " + messageSentToClient);
+                                printStream.println(messageSentToClient);
+                                System.out.println("successed");
+
+                            } else {
+
+                                messageSent = new Message();
+                                messageSent.setOperation("Login");
+                                messageSent.setStatus(false);
+
+                                messageSentToClient = gson.toJson(messageSent);
+
+                                System.out.println("msg json is " + messageSentToClient);
+                                printStream.println(messageSentToClient);
+                                System.out.println("failed");
                             }
 
                         }

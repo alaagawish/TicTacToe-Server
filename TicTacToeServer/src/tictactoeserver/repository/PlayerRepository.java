@@ -26,5 +26,59 @@ public class PlayerRepository {
         }
     }
 
-    
+    public Player editPassword(String username, String password) {
+        Player player = new Player();
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        String pw = "";
+        try {
+
+            preparedStatement = repository.connection.prepareStatement("UPDATE ROOT.PLAYER SET PASSWORD=? where PLAYERNAME=?",
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
+            preparedStatement.setString(1, password);
+            preparedStatement.setString(2, username);
+            preparedStatement.executeUpdate();
+            System.out.println("done execute update");
+
+            player = login(username, password);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return player;
+
+    }
+
+    public Player login(String username, String password) {
+        Player player = new Player();
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        String pw = "";
+        try {
+            preparedStatement = repository.connection.prepareStatement("select * from ROOT.PLAYER where PLAYERNAME=?",
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
+            preparedStatement.setString(1, username);
+            resultSet = preparedStatement.executeQuery();
+            System.out.println("resultset result: " + resultSet);
+            if (resultSet.next()) {
+
+                pw = resultSet.getString(5);
+                System.out.println("password: " + pw);
+
+                player.setId(resultSet.getInt("ID"));
+                player.setUsername(resultSet.getString("PLAYERNAME"));
+                player.setScore(resultSet.getInt("SCORE"));
+                player.setPassword(resultSet.getString("PASSWORD"));
+                player.setStatus(resultSet.getString("STATUS"));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return player;
+
+    }
+
 }
