@@ -8,7 +8,6 @@ public class Player {
     String status;
     int score;
     int id;
-    int portNum;
 
     public Player(String username, String password) {
 
@@ -36,7 +35,6 @@ public class Player {
     public void setUsername(String username) {
 
         this.username = username;
-
     }
 
     public int getId() {
