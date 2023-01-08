@@ -119,4 +119,49 @@ public class PlayerRepository {
 //        return player;
 //
 //    }
+    
+    public Player registerPlayer(String userName , String password){
+        Player player = new Player();
+        try {
+            int lastinsertid = 0;
+            
+            PreparedStatement ps1 = repository.connection.prepareStatement("Select PlayerName from Player Where PlayerName = ?");
+            ps1.setString(1, userName);
+            ResultSet rs =  ps1.executeQuery();
+            
+            if(rs.next()){
+                System.out.print("Person name is exit, please enter another userName");
+            }else{
+                PreparedStatement ps1LastId = repository.connection.prepareStatement("Select MAX(Id) FROM ROOT.Player");
+                ResultSet rs2 =  ps1LastId.executeQuery();
+                if (rs2.next()) {
+                    lastinsertid = rs2.getInt(1);
+                    System.out.println("lastID: " + lastinsertid);
+                    lastinsertid++;
+                    System.out.println("increase" + lastinsertid);
+                }
+                PreparedStatement  pst = repository.connection.prepareStatement( "INSERT INTO ROOT.PLAYER (Id,PlayerName,IPAddress,Status,Password,Score) VALUES (? ,?, ? ,? , ? , ?)" );
+                pst.setInt(1,lastinsertid);
+                pst.setString(2,userName);
+                pst.setString(3,"123.123.123.123");
+                pst.setString(4,"online");
+                pst.setString(5,password);
+                pst.setInt(6,0);
+                pst.executeUpdate();
+                
+                player.setId(lastinsertid);
+                player.setUsername(userName);
+                player.setPassword(password);
+                player.setStatus("online");
+                player.setScore(0);
+                System.out.print("new Player : "+player.getId()+" "+ player.getUsername()+ " " + player.getPassword() + " " + 
+                        player.getStatus()+"nnnn");
+            }
+           
+        } catch (SQLException ex) {
+            Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      
+        return player;
+    }
 }

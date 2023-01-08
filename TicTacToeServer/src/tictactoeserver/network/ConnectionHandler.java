@@ -135,7 +135,39 @@ class ConnectionHandler implements Runnable {
                                 System.out.println("failed");
                             }
 
-                        }
+                        } else if (messageReceived.getOperation().equals("register")) {
+                            username = messageReceived.getPlayers().get(0).getUsername();
+                            password = messageReceived.getPlayers().get(0).getPassword();
+                            System.out.println("username: " + username + " password:" + password);
+                            Player player = this.playerRepository.registerPlayer(username, password);
+                            if (player != null) {
+
+                                Message messageSent = new Message();
+                                messageSent.setOperation("register");
+                                messageSent.setStatus("done");
+
+                                String playerToString = gson.toJson(player);
+                                System.out.println("playerToString" + playerToString);
+                                messageSent.setPlayers(player);
+                                messageSentToClient = gson.toJson(messageSent);
+                                System.out.println("msg json is " + messageSentToClient);
+                                printStream.println(messageSentToClient);
+                                System.out.println("successed");
+
+                            } else {
+
+                                messageSent = new Message();
+                                messageSent.setOperation("register");
+                                messageSent.setStatus("wrong");
+
+                                messageSentToClient = gson.toJson(messageSent);
+
+                                System.out.println("msg json is " + messageSentToClient);
+                                printStream.println(messageSentToClient);
+                                System.out.println("failed");
+                            }
+
+                        } 
                     } else {
                         try {
 
