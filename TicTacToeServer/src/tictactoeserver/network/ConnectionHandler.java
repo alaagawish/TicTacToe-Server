@@ -20,7 +20,7 @@ class ConnectionHandler implements Runnable {
     static Vector<ConnectionHandler> clientsVector = new Vector<ConnectionHandler>();
     static Vector<ConnectionHandler> unavailableClients = new Vector<ConnectionHandler>();
     String messageSentToClient, messageReceivedFromClient;
-    PlayerRepository playerRepository;
+    public static PlayerRepository playerRepository;
     boolean flag = true, noInput = true;
     String message, password, username;
     int port;
@@ -51,7 +51,6 @@ class ConnectionHandler implements Runnable {
         while (true && noInput) {
 
             try {
-
                 messageReceivedFromClient = dataInputStream.readLine();
                 messageReceivedFromClient = messageReceivedFromClient.replaceAll("\r?\n", "");
                 if (messageReceivedFromClient != null) {
@@ -75,16 +74,15 @@ class ConnectionHandler implements Runnable {
                             username = messageReceived.getPlayers().get(0).getUsername();
                             password = messageReceived.getPlayers().get(0).getPassword();
                             System.out.println("username: " + username + " password:" + password);
-
-                            if (playerRepository.login(username, password) != null) {
+                            Player player = this.playerRepository.login(username, password);
+                            if (player != null) {
 
                                 Message messageSent = new Message();
                                 messageSent.setOperation("Login");
-                                messageSent.setStatus(true);
-
-                                Player player = playerRepository.login(username, password);
+                                messageSent.setStatus("done");
 
                                 String playerToString = gson.toJson(player);
+                                System.out.println("playerToString" + playerToString);
                                 messageSent.setPlayers(player);
                                 messageSentToClient = gson.toJson(messageSent);
                                 System.out.println("msg json is " + messageSentToClient);
@@ -95,7 +93,7 @@ class ConnectionHandler implements Runnable {
 
                                 messageSent = new Message();
                                 messageSent.setOperation("Login");
-                                messageSent.setStatus(false);
+                                messageSent.setStatus("wrong");
 
                                 messageSentToClient = gson.toJson(messageSent);
 
@@ -104,7 +102,7 @@ class ConnectionHandler implements Runnable {
                                 System.out.println("failed");
                             }
 
-                        }else if (messageReceived.getOperation().equals("Edit")) {
+                        } else if (messageReceived.getOperation().equals("Edit")) {
                             username = messageReceived.getPlayers().get(0).getUsername();
                             password = messageReceived.getPlayers().get(0).getPassword();
                             System.out.println("username: " + username + " password:" + password);
@@ -113,7 +111,7 @@ class ConnectionHandler implements Runnable {
 
                                 Message messageSent = new Message();
                                 messageSent.setOperation("Edit");
-                                messageSent.setStatus(true);
+                                messageSent.setStatus("done");
 
                                 Player player = playerRepository.login(username, password);
 
@@ -128,7 +126,7 @@ class ConnectionHandler implements Runnable {
 
                                 messageSent = new Message();
                                 messageSent.setOperation("Login");
-                                messageSent.setStatus(false);
+                                messageSent.setStatus("wrong");
 
                                 messageSentToClient = gson.toJson(messageSent);
 

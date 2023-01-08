@@ -64,18 +64,20 @@ public class PlayerRepository {
             preparedStatement.setString(1, username);
             resultSet = preparedStatement.executeQuery();
             System.out.println("resultset result: " + resultSet);
-            if (resultSet.next()) {
+            if (resultSet != null) {
+                resultSet.next();
 
                 pw = resultSet.getString(5);
-                System.out.println("password: " + pw);
+                System.out.println("password: " + pw + ", passw:" + password);
                 if (pw.equals(password)) {
+                    System.out.println("password: " + pw);
+
                     player.setId(resultSet.getInt("ID"));
                     player.setUsername(resultSet.getString("PLAYERNAME"));
                     player.setScore(resultSet.getInt("SCORE"));
                     player.setPassword(resultSet.getString("PASSWORD"));
                     player.setStatus(resultSet.getString("STATUS"));
                 }
-
             }
 
         } catch (SQLException ex) {
@@ -85,4 +87,36 @@ public class PlayerRepository {
 
     }
 
+//    public Player login(String username, String password) {
+//        Player player = new Player();
+//        PreparedStatement preparedStatement;
+//        ResultSet resultSet;
+//        String pw = "";
+//        try {
+//            preparedStatement = repository.connection.prepareStatement("select * from ROOT.PLAYER where PLAYERNAME=?",
+//                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+//                    ResultSet.CONCUR_READ_ONLY);
+//            preparedStatement.setString(1, username);
+//            resultSet = preparedStatement.executeQuery();
+//          
+//            if (resultSet.next()) {
+//  System.out.println("resultset result: " + resultSet.getString(2)+""+resultSet.getString("playername"));
+//                pw = resultSet.getString(5);
+//                System.out.println("password: " + pw);
+//                if (pw.equals(password)) {
+//                    player.setId(resultSet.getInt("ID"));
+//                    player.setUsername(resultSet.getString("PLAYERNAME"));
+//                    player.setScore(resultSet.getInt("SCORE"));
+//                    player.setPassword(resultSet.getString("PASSWORD"));
+//                    player.setStatus(resultSet.getString("STATUS"));
+//                }
+//
+//            }
+//
+//        } catch (SQLException ex) {
+//            Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return player;
+//
+//    }
 }
