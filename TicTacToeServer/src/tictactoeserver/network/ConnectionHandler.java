@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -167,6 +168,10 @@ class ConnectionHandler implements Runnable {
                                 System.out.println("failed");
                             }
 
+                        }else if (messageReceived.getOperation().equals("getOnlineList")) {
+                            
+                            printStream.println(getOnlinePlayersMessage());
+                            
                         } 
                     } else {
                         try {
@@ -227,4 +232,32 @@ class ConnectionHandler implements Runnable {
         }
 
     }
+    
+    public String getOnlinePlayersMessage() {
+
+        List<Player> onlinePlayers = playerRepository.getOfflinePlayers();
+                            
+        if (onlinePlayers!= null) {
+
+            messageSent = new Message();
+            messageSent.setOperation("getOnlineList");
+            messageSent.setStatus("done");
+            messageSent.setPlayers(onlinePlayers);
+
+            System.out.println("successed");
+
+        } else {
+
+            messageSent = new Message();
+            messageSent.setOperation("getOnlineList");
+            messageSent.setStatus("wrong");
+
+            System.out.println("failed");
+        }
+
+        messageSentToClient = gson.toJson(messageSent);
+        System.out.println("msg json is " + messageSentToClient);
+        return messageSentToClient;
+    }
+    
 }

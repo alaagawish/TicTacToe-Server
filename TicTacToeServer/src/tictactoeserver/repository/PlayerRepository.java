@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tictactoeserver.models.Player;
@@ -164,4 +166,37 @@ public class PlayerRepository {
       
         return player;
     }
+    
+    
+    public List<Player> getOfflinePlayers() {
+        List<Player> players = new ArrayList<>();
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        try {
+            preparedStatement = repository.connection.prepareStatement("select * from ROOT.PLAYER where STATUS= 'online'",
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
+            resultSet = preparedStatement.executeQuery();
+            System.out.println("resultset result: " + resultSet);
+            if (resultSet != null) {
+                resultSet.next();                
+                
+                for (int i = 1;resultSet.next();i++) {
+                    players.get(i).setId(resultSet.getInt("ID"));
+                    players.get(i).setUsername(resultSet.getString("PLAYERNAME"));
+                    players.get(i).setScore(resultSet.getInt("SCORE"));
+                    players.get(i).setPassword(resultSet.getString("PASSWORD"));
+                    players.get(i).setStatus(resultSet.getString("STATUS"));
+                    System.out.println(players.get(i).getId() + ", " + players.get(i).getUsername() +
+                                       ", " + players.get(i).getIpAddress() + ", " + players.get(i).getStatus() + ", " + players.get(i).getPassword()+ ", " + players.get(i).getScore());
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return players;
+
+    }
+    
 }
