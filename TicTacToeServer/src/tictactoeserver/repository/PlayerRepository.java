@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tictactoeserver.models.Player;
@@ -164,4 +166,35 @@ public class PlayerRepository {
       
         return player;
     }
+    
+    
+    public List<Player> getOfflinePlayers() {
+        List<Player> players = new ArrayList<>();
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        try {
+            preparedStatement = repository.connection.prepareStatement("select * from ROOT.PLAYER where STATUS= 'online'",
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
+            
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                            System.out.println("player: " + resultSet.getString(2));
+
+                Player player = new Player(resultSet.getString("playername"), resultSet.getString("password"), resultSet.getInt("SCORE"), resultSet.getString("STATUS"), resultSet.getInt("id"));
+
+                players.add(player);
+
+                System.out.println(player.getId() + ", " + player.getUsername()
+                         + ", " + player.getStatus() + ", " + player.getPassword() + ", " + player.getScore());
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return players;
+
+    }
+    
 }
