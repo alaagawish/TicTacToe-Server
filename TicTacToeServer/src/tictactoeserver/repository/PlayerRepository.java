@@ -176,20 +176,18 @@ public class PlayerRepository {
             preparedStatement = repository.connection.prepareStatement("select * from ROOT.PLAYER where STATUS= 'online'",
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
+            
             resultSet = preparedStatement.executeQuery();
-            System.out.println("resultset result: " + resultSet);
-            if (resultSet != null) {
-                resultSet.next();                
-                
-                for (int i = 1;resultSet.next();i++) {
-                    players.get(i).setId(resultSet.getInt("ID"));
-                    players.get(i).setUsername(resultSet.getString("PLAYERNAME"));
-                    players.get(i).setScore(resultSet.getInt("SCORE"));
-                    players.get(i).setPassword(resultSet.getString("PASSWORD"));
-                    players.get(i).setStatus(resultSet.getString("STATUS"));
-                    System.out.println(players.get(i).getId() + ", " + players.get(i).getUsername() +
-                                       ", " + players.get(i).getIpAddress() + ", " + players.get(i).getStatus() + ", " + players.get(i).getPassword()+ ", " + players.get(i).getScore());
-                }
+
+            while (resultSet.next()) {
+                            System.out.println("player: " + resultSet.getString(2));
+
+                Player player = new Player(resultSet.getString("playername"), resultSet.getString("password"), resultSet.getInt("SCORE"), resultSet.getString("STATUS"), resultSet.getInt("id"));
+
+                players.add(player);
+
+                System.out.println(player.getId() + ", " + player.getUsername()
+                         + ", " + player.getStatus() + ", " + player.getPassword() + ", " + player.getScore());
             }
 
         } catch (SQLException ex) {
