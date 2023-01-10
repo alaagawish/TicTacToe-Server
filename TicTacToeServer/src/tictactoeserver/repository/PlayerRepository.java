@@ -34,7 +34,7 @@ public class PlayerRepository {
         ResultSet resultSet;
         String pw = "";
         try {
-            System.out.println("new pw in player repo" + password);
+//            System.out.println("new pw in player repo" + password);
             preparedStatement = repository.connection.prepareStatement("UPDATE ROOT.PLAYER SET PASSWORD=? where PLAYERNAME=?",
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
@@ -42,10 +42,9 @@ public class PlayerRepository {
             preparedStatement.setString(2, username);
             if (preparedStatement.executeUpdate() > 0) {
 
-                System.out.println("done execute update");
-
+//                System.out.println("done execute update");
                 player = login(username, password);
-                System.out.println(player);
+//                System.out.println(player);
             }
         } catch (SQLException ex) {
             Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
@@ -65,14 +64,14 @@ public class PlayerRepository {
                     ResultSet.CONCUR_READ_ONLY);
             preparedStatement.setString(1, username);
             resultSet = preparedStatement.executeQuery();
-            System.out.println("resultset result: " + resultSet);
+//            System.out.println("resultset result: " + resultSet);
             if (resultSet != null) {
                 resultSet.next();
 
                 pw = resultSet.getString(5);
-                System.out.println("password: " + pw + ", passw:" + password);
+//                System.out.println("password: " + pw + ", passw:" + password);
                 if (pw.equals(password)) {
-                    System.out.println("password: " + pw);
+//                    System.out.println("password: " + pw);
 
                     player.setId(resultSet.getInt("ID"));
                     player.setUsername(resultSet.getString("PLAYERNAME"));
@@ -89,85 +88,51 @@ public class PlayerRepository {
 
     }
 
-//    public Player login(String username, String password) {
-//        Player player = new Player();
-//        PreparedStatement preparedStatement;
-//        ResultSet resultSet;
-//        String pw = "";
-//        try {
-//            preparedStatement = repository.connection.prepareStatement("select * from ROOT.PLAYER where PLAYERNAME=?",
-//                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-//                    ResultSet.CONCUR_READ_ONLY);
-//            preparedStatement.setString(1, username);
-//            resultSet = preparedStatement.executeQuery();
-//          
-//            if (resultSet.next()) {
-//  System.out.println("resultset result: " + resultSet.getString(2)+""+resultSet.getString("playername"));
-//                pw = resultSet.getString(5);
-//                System.out.println("password: " + pw);
-//                if (pw.equals(password)) {
-//                    player.setId(resultSet.getInt("ID"));
-//                    player.setUsername(resultSet.getString("PLAYERNAME"));
-//                    player.setScore(resultSet.getInt("SCORE"));
-//                    player.setPassword(resultSet.getString("PASSWORD"));
-//                    player.setStatus(resultSet.getString("STATUS"));
-//                }
-//
-//            }
-//
-//        } catch (SQLException ex) {
-//            Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return player;
-//
-//    }
-    
-    public Player registerPlayer(String userName , String password){
+    public Player registerPlayer(String userName, String password) {
         Player player = new Player();
         try {
             int lastinsertid = 0;
-            
+
             PreparedStatement ps1 = repository.connection.prepareStatement("Select PlayerName from Player Where PlayerName = ?");
             ps1.setString(1, userName);
-            ResultSet rs =  ps1.executeQuery();
-            
-            if(rs.next()){
+            ResultSet rs = ps1.executeQuery();
+
+            if (rs.next()) {
                 System.out.print("Person name is exit, please enter another userName");
-            }else{
+            } else {
                 PreparedStatement ps1LastId = repository.connection.prepareStatement("Select MAX(Id) FROM ROOT.Player");
-                ResultSet rs2 =  ps1LastId.executeQuery();
+                ResultSet rs2 = ps1LastId.executeQuery();
                 if (rs2.next()) {
                     lastinsertid = rs2.getInt(1);
                     System.out.println("lastID: " + lastinsertid);
                     lastinsertid++;
                     System.out.println("increase" + lastinsertid);
                 }
-                PreparedStatement  pst = repository.connection.prepareStatement( "INSERT INTO ROOT.PLAYER (Id,PlayerName,IPAddress,Status,Password,Score) VALUES (? ,?, ? ,? , ? , ?)" );
-                pst.setInt(1,lastinsertid);
-                pst.setString(2,userName);
-                pst.setString(3,"123.123.123.123");
-                pst.setString(4,"online");
-                pst.setString(5,password);
-                pst.setInt(6,0);
+                PreparedStatement pst = repository.connection.prepareStatement("INSERT INTO ROOT.PLAYER (Id,PlayerName,IPAddress,Status,Password,Score) VALUES (? ,?, ? ,? , ? , ?)");
+                pst.setInt(1, lastinsertid);
+                pst.setString(2, userName);
+                pst.setString(3, "123.123.123.123");
+                pst.setString(4, "online");
+                pst.setString(5, password);
+                pst.setInt(6, 0);
                 pst.executeUpdate();
-                
+
                 player.setId(lastinsertid);
                 player.setUsername(userName);
                 player.setPassword(password);
                 player.setStatus("online");
                 player.setScore(0);
-                System.out.print("new Player : "+player.getId()+" "+ player.getUsername()+ " " + player.getPassword() + " " + 
-                        player.getStatus()+"nnnn");
+                System.out.print("new Player : " + player.getId() + " " + player.getUsername() + " " + player.getPassword() + " "
+                        + player.getStatus() + "nnnn");
             }
-           
+
         } catch (SQLException ex) {
             Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
-      
+
         return player;
     }
-    
-    
+
     public List<Player> getOfflinePlayers() {
         List<Player> players = new ArrayList<>();
         PreparedStatement preparedStatement;
@@ -176,18 +141,18 @@ public class PlayerRepository {
             preparedStatement = repository.connection.prepareStatement("select * from ROOT.PLAYER where STATUS= 'online'",
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
-            
+
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                            System.out.println("player: " + resultSet.getString(2));
+                System.out.println("player: " + resultSet.getString(2));
 
                 Player player = new Player(resultSet.getString("playername"), resultSet.getString("password"), resultSet.getInt("SCORE"), resultSet.getString("STATUS"), resultSet.getInt("id"));
 
                 players.add(player);
 
                 System.out.println(player.getId() + ", " + player.getUsername()
-                         + ", " + player.getStatus() + ", " + player.getPassword() + ", " + player.getScore());
+                        + ", " + player.getStatus() + ", " + player.getPassword() + ", " + player.getScore());
             }
 
         } catch (SQLException ex) {
@@ -196,5 +161,5 @@ public class PlayerRepository {
         return players;
 
     }
-    
+
 }
