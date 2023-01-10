@@ -16,7 +16,7 @@ public class HomeScreenBase extends AnchorPane {
 
     protected final Button startButton;
     protected final PieChart pieChart;
-    boolean flag;
+    public static boolean flag;
     public static Network network;
 
     public HomeScreenBase() {

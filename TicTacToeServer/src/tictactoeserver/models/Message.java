@@ -36,7 +36,7 @@ public class Message {
     public void setPlayers(Player players) {
         this.players.add(players);
     }
-    
+
     public void setPlayers(List<Player> players) {
         this.players.addAll(players);
     }
