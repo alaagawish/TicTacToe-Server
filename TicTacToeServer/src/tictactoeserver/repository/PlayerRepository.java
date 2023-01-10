@@ -141,18 +141,18 @@ public class PlayerRepository {
             preparedStatement = repository.connection.prepareStatement("select * from ROOT.PLAYER where STATUS= 'online'",
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
+
             resultSet = preparedStatement.executeQuery();
 
-
             while (resultSet.next()) {
-                            System.out.println("player: " + resultSet.getString(2));
+                System.out.println("player: " + resultSet.getString(2));
 
                 Player player = new Player(resultSet.getString("playername"), resultSet.getString("password"), resultSet.getInt("SCORE"), resultSet.getString("STATUS"), resultSet.getInt("id"));
 
                 players.add(player);
 
                 System.out.println(player.getId() + ", " + player.getUsername()
-                         + ", " + player.getStatus() + ", " + player.getPassword() + ", " + player.getScore());
+                        + ", " + player.getStatus() + ", " + player.getPassword() + ", " + player.getScore());
             }
 
         } catch (SQLException ex) {
