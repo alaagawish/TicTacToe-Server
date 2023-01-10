@@ -6,36 +6,39 @@ import java.util.List;
 public class Message {
 
     String operation;
-    boolean status;
-    String ipAddress;
+    String status;
     List<Player> players;
 
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
     public Message() {
-        this.players = new ArrayList<>();
-    }
-
-    public void setOperation(String operation) {
-        this.operation = operation;
-    }
-
-    public void setPlayers(Player player) {
-        this.players.add(player);
+        players = new ArrayList<Player>();
     }
 
     public String getOperation() {
         return operation;
     }
 
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public List<Player> getPlayers() {
         return players;
+    }
+
+    public void setPlayers(Player players) {
+        this.players.add(players);
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players.addAll(players);
     }
 
     @Override
