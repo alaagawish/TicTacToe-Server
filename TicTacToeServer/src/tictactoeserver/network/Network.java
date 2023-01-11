@@ -24,7 +24,6 @@ public class Network extends Thread {
 
             if (!ConnectionHandler.clientsVector.isEmpty()) {
                 connectionHandler.closeConnection();
-
             }
             stop();
             serverSocket.close();
