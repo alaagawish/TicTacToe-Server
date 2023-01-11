@@ -4,10 +4,10 @@ public class Player {
 
     private String username;
     private String password;
-    String ipAddress;
-    String status;
-    int score;
-    int id;
+    private String ipAddress;
+    private String status;
+    private int score;
+    private int id;
 
     public Player(String username, String password) {
 

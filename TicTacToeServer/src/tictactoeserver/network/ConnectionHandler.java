@@ -22,7 +22,7 @@ class ConnectionHandler implements Runnable {
     String messageSentToClient, messageReceivedFromClient;
     PlayerRepository playerRepository;
     boolean flag = true, noInput = true;
-    String message, password, username;
+    String message, password, username, status;
     int port;
     Gson gson;
     Message messageSent, messageReceived;
@@ -53,6 +53,7 @@ class ConnectionHandler implements Runnable {
             try {
 
                 messageReceivedFromClient = dataInputStream.readLine();
+                System.out.println("message receiveed from client ARWAAAAAAAA"+messageReceivedFromClient);
                 messageReceivedFromClient = messageReceivedFromClient.replaceAll("\r?\n", "");
                 if (messageReceivedFromClient != null) {
                     if (messageReceivedFromClient.length() > 0) {
@@ -71,7 +72,36 @@ class ConnectionHandler implements Runnable {
                                 }
                             }
 
-                        } else if (messageReceived.getOperation().equals("Login")) {
+                        } else if (messageReceived.getOperation().equalsIgnoreCase("logout")) {
+                            status = messageReceived.getPlayers().get(0).getStatus();
+                            username = messageReceived.getPlayers().get(0).getUsername();
+                            System.out.println("status : " + status + "username : " + username);
+
+                            if (playerRepository.logout(username)) {
+                                messageSent = new Message();
+                                messageSent.setOperation("logout");
+                                messageSent.setStatus(true);
+
+                                messageSentToClient = gson.toJson(messageSent);
+                                System.out.println("msg json is " + messageSentToClient);
+                                printStream.println(messageSentToClient);
+                                System.out.println("logout successed");
+
+                            } else {
+                                // in case he did not log out 
+                                messageSent = new Message();
+                                messageSent.setOperation("logout");
+                                messageSent.setStatus(false);
+
+                                messageSentToClient = gson.toJson(messageSent);
+
+                                System.out.println("msg json is " + messageSentToClient);
+                                printStream.println(messageSentToClient);
+                                System.out.println("logout failed");
+
+                            }
+
+                        } else if (messageReceived.getOperation().equalsIgnoreCase("Login")) {
                             username = messageReceived.getPlayers().get(0).getUsername();
                             password = messageReceived.getPlayers().get(0).getPassword();
                             System.out.println("username: " + username + " password:" + password);
@@ -89,7 +119,7 @@ class ConnectionHandler implements Runnable {
                                 messageSentToClient = gson.toJson(messageSent);
                                 System.out.println("msg json is " + messageSentToClient);
                                 printStream.println(messageSentToClient);
-                                System.out.println("successed");
+                                System.out.println("logout successed");
 
                             } else {
 
@@ -104,7 +134,8 @@ class ConnectionHandler implements Runnable {
                                 System.out.println("failed");
                             }
 
-                        } if (messageReceived.getOperation().equals("Edit")) {
+                        }
+                        if (messageReceived.getOperation().equals("Edit")) {
                             username = messageReceived.getPlayers().get(0).getUsername();
                             password = messageReceived.getPlayers().get(0).getPassword();
                             System.out.println("username: " + username + " password:" + password);
@@ -163,7 +194,6 @@ class ConnectionHandler implements Runnable {
 
                     }
                     messageReceivedFromClient = null;
-
                 }
             } catch (IOException ex) {
                 Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);

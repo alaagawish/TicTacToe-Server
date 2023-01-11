@@ -1,18 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package tictactoeserver.models;
 
-/**
- *
- * @author moazk
- */
 public class RecordedGame {
-    int recordId;
-    String recordName;
-    int playerId;
+    private int recordId;
+    private String recordName;
+    private int playerId;
 
     public RecordedGame() {
     }

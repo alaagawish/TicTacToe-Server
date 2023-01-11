@@ -5,10 +5,10 @@ import java.util.List;
 
 public class Message {
 
-    String operation;
-    boolean status;
-    String ipAddress;
-    List<Player> players;
+    private String operation;
+    private boolean status;
+    private String ipAddress;
+    private List<Player> players;
 //    String newPassword;
 //
 //    public String getNewPassword() {
