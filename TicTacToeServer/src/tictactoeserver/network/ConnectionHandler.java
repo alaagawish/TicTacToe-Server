@@ -24,7 +24,7 @@ class ConnectionHandler implements Runnable {
     String messageSentToClient, messageReceivedFromClient;
     public static PlayerRepository playerRepository;
     boolean flag = true, noInput = true;
-    String message, password, username;
+    String message, password, username, status;
     int port;
     Gson gson;
     Message messageSent, messageReceived, messageSentToSecondPlayer, messageSentToFirstPlayer;
@@ -103,6 +103,35 @@ class ConnectionHandler implements Runnable {
 
                                 messageSentToClient = gson.toJson(messageSent);
                                 printStream.println(messageSentToClient);
+                            }
+
+                        } else if (messageReceived.getOperation().equalsIgnoreCase("logout")) {
+                            status = messageReceived.getPlayers().get(0).getStatus();
+                            username = messageReceived.getPlayers().get(0).getUsername();
+                            System.out.println("status : " + status + "username : " + username);
+                            
+                            if (playerRepository.logout(username)) {
+                                Message messageSent = new Message();
+                                messageSent.setOperation("logout");
+                                messageSent.setStatus("done");
+
+                                messageSentToClient = gson.toJson(messageSent);
+                                System.err.println("msg json is in connection handler " + messageSentToClient);
+                                printStream.println(messageSentToClient);
+                                System.out.println("logout successed");
+
+                            } else {
+                                // in case he did not log out 
+                                messageSent = new Message();
+                                messageSent.setOperation("logout");
+                                messageSent.setStatus("wrong");
+
+                                messageSentToClient = gson.toJson(messageSent);
+
+                                System.out.println("msg json is " + messageSentToClient);
+                                printStream.println(messageSentToClient);
+                                System.out.println("logout failed");
+
                             }
 
                         } else if (messageReceived.getOperation().equals("Edit")) {
@@ -186,6 +215,36 @@ class ConnectionHandler implements Runnable {
 
                             printStream.println(getOnlinePlayersMessage());
 
+                        } else if (messageReceived.getOperation().equalsIgnoreCase("firstPlayerMove")) {
+//                            playerOne = messageReceived.getPlayers().get(0);
+//                            playerTwo = messageReceived.getPlayers().get(1);
+//
+//                            OnlineListBase.dialog2.show();
+                            messageSent = new Message();
+                            messageSent.setOperation("secondPlayerMove");
+                            messageSent.setStatus("done");
+                            messageSent.setPlayers(messageReceived.getPlayers().get(0));
+                            messageSent.setPlayers(messageReceived.getPlayers().get(1));
+
+                            messageSent.setMoves(messageReceived.getMoves());
+                            messageSentToClient = gson.toJson(messageSent);
+                            ///send to second client
+                            sendMoves(messageReceived.getPlayers().get(1).getId(), messageSentToClient);
+                            printStream.println(messageSentToClient);
+                            System.out.println("first player move:server");
+                        } else if (messageReceived.getOperation().equalsIgnoreCase("secondPlayerMove")) {
+                            messageSent = new Message();
+                            messageSent.setOperation("firstPlayerMove");
+                            messageSent.setStatus("done");
+                            messageSent.setPlayers(messageReceived.getPlayers().get(0));
+                            messageSent.setPlayers(messageReceived.getPlayers().get(1));
+
+                            messageSent.setMoves(messageReceived.getMoves());
+                            messageSentToClient = gson.toJson(messageSent);
+                            ///send to second client
+                            sendMoves(messageReceived.getPlayers().get(0).getId(), messageSentToClient);
+                            printStream.println(messageSentToClient);
+                            System.out.println("second player move.:server");
                         }
                     } else {
                         try {
@@ -304,6 +363,19 @@ class ConnectionHandler implements Runnable {
                 System.out.println("responseGame,server:::" + messageSentToFirstPlayer.getStatus());
                 messageSentToClient = gson.toJson(messageSentToFirstPlayer);
                 client.printStream.println(messageSentToClient);
+
+            }
+
+        }
+    }
+
+    public void sendMoves(int id, String message) {
+        for (ConnectionHandler client : clientsVector) {
+            if (client.id == id) {
+
+                System.out.println("sendmove,server:::" + message);
+//                messageSentToClient = gson.toJson(messageSentToFirstPlayer);
+                client.printStream.println(message);
 
             }
 

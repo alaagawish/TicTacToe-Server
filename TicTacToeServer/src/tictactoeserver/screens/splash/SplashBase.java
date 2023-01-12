@@ -65,7 +65,7 @@ public class SplashBase extends AnchorPane {
         fadeIn.play();
 
         fadeIn.setOnFinished((e) -> {
-            Parent pane = new HomeScreenBase();
+            Parent pane = new HomeScreenBase(stage);
             stage.getScene().setRoot(pane);
         });
 

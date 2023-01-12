@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.Alert;
 import org.apache.derby.jdbc.ClientDriver;
 
 public class Repository {
@@ -18,6 +19,12 @@ public class Repository {
             connection = DriverManager.getConnection("jdbc:derby://localhost:1527/TicTacToe", "root", "root");
         } catch (SQLException ex) {
             Logger.getLogger(Repository.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error DB");
+            alert.setHeaderText("Error in DataBase");
+            alert.setContentText("You should start Database first" + ex.getLocalizedMessage());
+            alert.showAndWait();
+
         }
     }
 
