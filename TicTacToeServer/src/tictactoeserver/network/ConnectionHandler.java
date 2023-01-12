@@ -24,7 +24,7 @@ class ConnectionHandler implements Runnable {
     String messageSentToClient, messageReceivedFromClient;
     public static PlayerRepository playerRepository;
     boolean flag = true, noInput = true;
-    String message, password, username;
+    String message, password, username, status;
     int port;
     Gson gson;
     Message messageSent, messageReceived, messageSentToSecondPlayer, messageSentToFirstPlayer;
@@ -103,6 +103,35 @@ class ConnectionHandler implements Runnable {
 
                                 messageSentToClient = gson.toJson(messageSent);
                                 printStream.println(messageSentToClient);
+                            }
+
+                        } else if (messageReceived.getOperation().equalsIgnoreCase("logout")) {
+                            status = messageReceived.getPlayers().get(0).getStatus();
+                            username = messageReceived.getPlayers().get(0).getUsername();
+                            System.out.println("status : " + status + "username : " + username);
+                            
+                            if (playerRepository.logout(username)) {
+                                Message messageSent = new Message();
+                                messageSent.setOperation("logout");
+                                messageSent.setStatus("done");
+
+                                messageSentToClient = gson.toJson(messageSent);
+                                System.err.println("msg json is in connection handler " + messageSentToClient);
+                                printStream.println(messageSentToClient);
+                                System.out.println("logout successed");
+
+                            } else {
+                                // in case he did not log out 
+                                messageSent = new Message();
+                                messageSent.setOperation("logout");
+                                messageSent.setStatus("wrong");
+
+                                messageSentToClient = gson.toJson(messageSent);
+
+                                System.out.println("msg json is " + messageSentToClient);
+                                printStream.println(messageSentToClient);
+                                System.out.println("logout failed");
+
                             }
 
                         } else if (messageReceived.getOperation().equals("Edit")) {

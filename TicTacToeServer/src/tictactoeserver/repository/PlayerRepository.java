@@ -52,8 +52,7 @@ public class PlayerRepository {
         return player;
 
     }
-    
-    
+
     public Player requestGame(String username, String password) {
         Player player = new Player();
         PreparedStatement preparedStatement;
@@ -79,38 +78,81 @@ public class PlayerRepository {
 
     }
 
-    public Player login(String username, String password) {
+    public synchronized boolean logout(String userName) {
+        PreparedStatement preparedStatement;
+        String query = "update ROOT.PLAYER set STATUS='offline' where PLAYERNAME=?";
+
+        try {
+            preparedStatement = repository.connection.prepareStatement(query,
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
+            preparedStatement.setString(1, userName);
+            int result = preparedStatement.executeUpdate();
+            System.out.println("done execute logout");
+            System.out.println(result);
+            if (result == 1) {
+                System.out.println("enter logout");
+                return true;
+            } else {
+                System.out.println("result from logout = 0");
+                return false;
+            }
+
+        } catch (SQLException ex) {
+            System.err.println("EXception from logout function " + ex.getLocalizedMessage());
+            ex.printStackTrace();
+        }
+        return false;
+
+    }
+
+    public synchronized Player login(String username, String password) {
         Player player = new Player();
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         String pw = "";
+        int resultFromUpdate;
         try {
             preparedStatement = repository.connection.prepareStatement("select * from ROOT.PLAYER where PLAYERNAME=?",
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
             preparedStatement.setString(1, username);
             resultSet = preparedStatement.executeQuery();
-//            System.out.println("resultset result: " + resultSet);
-            if (resultSet != null) {
-                resultSet.next();
-
+            System.out.println("resultset result: " + resultSet);
+            if (resultSet.next()) {
+                resultFromUpdate = updateStatusOnline(username);
                 pw = resultSet.getString(5);
-//                System.out.println("password: " + pw + ", passw:" + password);
-                if (pw.equals(password)) {
-//                    System.out.println("password: " + pw);
-
-                    player.setId(resultSet.getInt("ID"));
-                    player.setUsername(resultSet.getString("PLAYERNAME"));
-                    player.setScore(resultSet.getInt("SCORE"));
-                    player.setPassword(resultSet.getString("PASSWORD"));
-                    player.setStatus(resultSet.getString("STATUS"));
-                }
+                System.out.println("password: " + pw);
+                System.out.println("result from Update " + resultFromUpdate + "");
+                player.setId(resultSet.getInt("ID"));
+                player.setUsername(resultSet.getString("PLAYERNAME"));
+                player.setScore(resultSet.getInt("SCORE"));
+                player.setPassword(resultSet.getString("PASSWORD"));
+                player.setStatus(resultSet.getString("STATUS"));
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
         return player;
+
+    }
+
+    private synchronized int updateStatusOnline(String playerName) {
+        PreparedStatement preparedStatement;
+        int result = 0;
+        String query = "update player set status='online' where PLAYERNAME=?";
+        try {
+            preparedStatement = repository.connection.prepareStatement(query,
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
+            preparedStatement.setString(1, playerName);
+            result = preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return result;
 
     }
 
