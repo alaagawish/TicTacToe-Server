@@ -229,5 +229,51 @@ public class PlayerRepository {
         return players;
 
     }
+    
+    public synchronized int selectOffline() {
+
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        String query = "select count(status) from player where status='offline'";
+        int offlineNumber = 0;
+        try {
+            preparedStatement = repository.connection.prepareStatement(query,
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                offlineNumber = resultSet.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getLocalizedMessage());
+            ex.printStackTrace();
+        }
+
+        return offlineNumber;
+
+    }
+    
+    public synchronized int selectOnline() {
+        PreparedStatement ps;
+        ResultSet rs;
+        String query = "select count(status) from player where status='available' or status  ='online'";
+        int onlineNumber = 0;
+        try {
+            ps = repository.connection.prepareStatement(query,
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                onlineNumber = rs.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getLocalizedMessage());
+            ex.printStackTrace();
+        }
+
+        return onlineNumber;
+    }
 
 }
