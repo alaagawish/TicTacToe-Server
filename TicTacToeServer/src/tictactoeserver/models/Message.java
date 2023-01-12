@@ -8,9 +8,19 @@ public class Message {
     String operation;
     String status;
     List<Player> players;
+    List<Move> moves;
+
+    public List<Move> getMoves() {
+        return moves;
+    }
+
+    public void setMoves(List<Move> moves) {
+        this.moves = moves;
+    }
 
     public Message() {
         players = new ArrayList<Player>();
+        moves = new ArrayList<Move>();
     }
 
     public String getOperation() {
