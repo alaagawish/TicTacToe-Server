@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import tictactoeserver.models.Player;
 
 public class PlayerRepository {
@@ -160,6 +162,9 @@ public class PlayerRepository {
         Player player = new Player();
         try {
             int lastinsertid = 0;
+            String regex = "^([a-zA-Z]+[0-9]+[a-zA-Z0-9]*|[0-9]+[a-zA-Z][a-zA-Z0-9]*)$";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(password);
 
             PreparedStatement ps1 = repository.connection.prepareStatement("Select PlayerName from Player Where PlayerName = ?");
             ps1.setString(1, userName);
@@ -167,7 +172,7 @@ public class PlayerRepository {
 
             if (rs.next()) {
                 System.out.print("Person name is exit, please enter another userName");
-            } else if(!rs.next() && password.length() >= 8){
+            } else if(!rs.next() && password.length() >= 8 && matcher.matches()){
                 PreparedStatement ps1LastId = repository.connection.prepareStatement("Select MAX(Id) FROM ROOT.Player");
                 ResultSet rs2 = ps1LastId.executeQuery();
                 if (rs2.next()) {
