@@ -167,7 +167,7 @@ public class PlayerRepository {
 
             if (rs.next()) {
                 System.out.print("Person name is exit, please enter another userName");
-            } else {
+            } else if(!rs.next() && password.length() >= 8){
                 PreparedStatement ps1LastId = repository.connection.prepareStatement("Select MAX(Id) FROM ROOT.Player");
                 ResultSet rs2 = ps1LastId.executeQuery();
                 if (rs2.next()) {
@@ -229,7 +229,7 @@ public class PlayerRepository {
         return players;
 
     }
-    
+
     public synchronized int selectOffline() {
 
         PreparedStatement preparedStatement;
@@ -253,7 +253,7 @@ public class PlayerRepository {
         return offlineNumber;
 
     }
-    
+
     public synchronized int selectOnline() {
         PreparedStatement ps;
         ResultSet rs;
@@ -274,6 +274,17 @@ public class PlayerRepository {
         }
 
         return onlineNumber;
+    }
+
+    public void updateScore(String username, int score) {   
+        try {
+            PreparedStatement pst = repository.connection.prepareStatement("UPDATE ROOT.PLAYER SET SCORE=? where PLAYERNAME=?");
+            pst.setInt(1, score);
+            pst.setString(2, username);
+            pst.executeUpdate(); 
+        } catch (SQLException ex) {
+            Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }
