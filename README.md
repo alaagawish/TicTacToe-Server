@@ -1,8 +1,8 @@
 # Team Members:
-## 1- Alaa El-Sayed Al-Araby
-## 2- Nada Ayman
-## 3- Arwa Ashraf
-## 4- Moaz Khaled
+  ## 1- [Alaa El-Sayed Al-Araby](https://github.com/alaagawish)
+  ## 2- [Nada Ayman](https://github.com/nada-99)
+  ## 3- [Arwa Ashraf](https://github.com/Arwa-Ashraf98)
+  ## 4- [Moaz Khaled](https://github.com/moazkhaleed)
 
 # Server
 This project represents server that connect players and displays PieChart represents the percentage of active players and offline.
