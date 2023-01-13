@@ -162,17 +162,14 @@ public class PlayerRepository {
         Player player = new Player();
         try {
             int lastinsertid = 0;
-            String regex = "^([a-zA-Z]+[0-9]+[a-zA-Z0-9]*|[0-9]+[a-zA-Z][a-zA-Z0-9]*)$";
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(password);
-
+            
             PreparedStatement ps1 = repository.connection.prepareStatement("Select PlayerName from Player Where PlayerName = ?");
             ps1.setString(1, userName);
             ResultSet rs = ps1.executeQuery();
 
             if (rs.next()) {
                 System.out.print("Person name is exit, please enter another userName");
-            } else if(!rs.next() && password.length() >= 8 && matcher.matches()){
+            } else if(!rs.next()){
                 PreparedStatement ps1LastId = repository.connection.prepareStatement("Select MAX(Id) FROM ROOT.Player");
                 ResultSet rs2 = ps1LastId.executeQuery();
                 if (rs2.next()) {
