@@ -229,7 +229,7 @@ public class PlayerRepository {
         return players;
 
     }
-    
+
     public synchronized int selectOffline() {
 
         PreparedStatement preparedStatement;
@@ -253,7 +253,7 @@ public class PlayerRepository {
         return offlineNumber;
 
     }
-    
+
     public synchronized int selectOnline() {
         PreparedStatement ps;
         ResultSet rs;
@@ -274,6 +274,34 @@ public class PlayerRepository {
         }
 
         return onlineNumber;
+    }
+
+    public void updateScore(String username, int score) {
+        try {
+            PreparedStatement pst = repository.connection.prepareStatement("UPDATE ROOT.PLAYER SET SCORE=? where PLAYERNAME=?");
+            pst.setInt(1, score);
+            pst.setString(2, username);
+            pst.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public int selectScore(String username) {
+        int score = 0;
+        try {
+            PreparedStatement ps = repository.connection.prepareStatement("SELECT SCORE FROM ROOT.PLAYER WHERE PLAYERNAME=?");
+            ps.setString(1,username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                score = rs.getInt("Score");
+                System.out.println("Score: " + score);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return score;
     }
 
 }
