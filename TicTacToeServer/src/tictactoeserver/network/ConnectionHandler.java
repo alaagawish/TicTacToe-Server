@@ -25,6 +25,7 @@ class ConnectionHandler implements Runnable {
     public static PlayerRepository playerRepository;
     boolean flag = true, noInput = true;
     String message, password, username, status;
+    int score;
     int port;
     Gson gson;
     Message messageSent, messageReceived, messageSentToSecondPlayer, messageSentToFirstPlayer;
@@ -233,6 +234,17 @@ class ConnectionHandler implements Runnable {
                                 sendMoves(messageReceived.getPlayers().get(0).getId(), messageSentToClient);
 
                             }
+
+                        } else if (messageReceived.getOperation().equals("updateScore")) {
+                            username = messageReceived.getPlayers().get(0).getUsername();
+                            score = messageReceived.getPlayers().get(0).getScore();
+                            playerRepository.updateScore(username, score);
+
+                            messageSent = new Message();
+                            messageSent.setOperation("updateScore");
+                            messageSent.setStatus("done");
+                            messageSentToClient = gson.toJson(messageSent);
+                            printStream.println(messageSentToClient);
 
                         }
                     } else {

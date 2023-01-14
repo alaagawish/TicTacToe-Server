@@ -276,7 +276,7 @@ public class PlayerRepository {
         return onlineNumber;
     }
 
-    public void updateScore(String username, int score) {
+    public synchronized void updateScore(String username, int score) {
         try {
             PreparedStatement pst = repository.connection.prepareStatement("UPDATE ROOT.PLAYER SET SCORE=? where PLAYERNAME=?");
             pst.setInt(1, score);
