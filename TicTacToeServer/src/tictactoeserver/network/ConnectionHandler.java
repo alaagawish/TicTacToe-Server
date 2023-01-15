@@ -55,6 +55,7 @@ class ConnectionHandler implements Runnable {
 
             try {
                 messageReceivedFromClient = dataInputStream.readLine();
+                messageReceivedFromClient = messageReceivedFromClient.replaceAll("\r?\n", "");
                 System.out.println("messageReceivedFromClient::" + messageReceivedFromClient);
 
                 if (messageReceivedFromClient != null) {
@@ -109,7 +110,6 @@ class ConnectionHandler implements Runnable {
                             status = messageReceived.getPlayers().get(0).getStatus();
                             username = messageReceived.getPlayers().get(0).getUsername();
                             System.out.println("status : " + status + "username : " + username);
-                            
                             if (playerRepository.logout(username)) {
                                 Message messageSent = new Message();
                                 messageSent.setOperation("logout");
@@ -134,6 +134,42 @@ class ConnectionHandler implements Runnable {
 
                             }
 
+                        } else if (messageReceived.getOperation().equalsIgnoreCase("Login")) {
+                            username = messageReceived.getPlayers().get(0).getUsername();
+                            password = messageReceived.getPlayers().get(0).getPassword();
+                            System.out.println("username: " + username + " password:" + password);
+
+                            if (playerRepository.login(username, password) != null) {
+
+                                Message messageSent = new Message();
+                                messageSent.setOperation("Login");
+
+                                Player player = playerRepository.login(username, password);
+
+                                String playerToString = gson.toJson(player);
+                                messageSent.setPlayers(player);
+                                messageSentToClient = gson.toJson(messageSent);
+                                System.out.println("msg json is " + messageSentToClient);
+                                printStream.println(messageSentToClient);
+                                System.out.println("logout successed");
+
+                            } else {
+
+                                messageSent = new Message();
+                                messageSent.setOperation("Login");
+
+                                messageSentToClient = gson.toJson(messageSent);
+
+                                System.out.println("msg json is " + messageSentToClient);
+                                printStream.println(messageSentToClient);
+                                System.out.println("failed");
+                            }
+
+                        }
+                        if (messageReceived.getOperation().equals("Edit")) {
+                            username = messageReceived.getPlayers().get(0).getUsername();
+                            password = messageReceived.getPlayers().get(0).getPassword();
+                            System.out.println("username: " + username + " password:" + password);
                         } else if (messageReceived.getOperation().equals("Edit")) {
                             username = messageReceived.getPlayers().get(0).getUsername();
                             password = messageReceived.getPlayers().get(0).getPassword();
@@ -274,7 +310,6 @@ class ConnectionHandler implements Runnable {
 
                     }
                     messageReceivedFromClient = null;
-
                 }
             } catch (IOException ex) {
                 Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -326,6 +361,7 @@ class ConnectionHandler implements Runnable {
             messageSent.setOperation("getOnlineList");
             messageSent.setStatus("done");
             messageSent.setPlayers(onlinePlayers);
+
             System.out.println("successed");
 
         } else {
