@@ -56,7 +56,6 @@ public class PlayerRepository {
         ResultSet resultSet;
         String pw = "";
         try {
-//            System.out.println("new pw in player repo" + password);
             preparedStatement = repository.connection.prepareStatement("UPDATE ROOT.PLAYER SET PASSWORD=? where PLAYERNAME=?",
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
@@ -64,9 +63,7 @@ public class PlayerRepository {
             preparedStatement.setString(2, username);
             if (preparedStatement.executeUpdate() > 0) {
 
-//                System.out.println("done execute update");
                 player = login(username, password);
-//                System.out.println(player);
             }
         } catch (SQLException ex) {
             Logger.getLogger(PlayerRepository.class.getName()).log(Level.SEVERE, null, ex);

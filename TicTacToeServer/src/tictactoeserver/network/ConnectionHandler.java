@@ -117,21 +117,16 @@ class ConnectionHandler implements Runnable {
                                 messageSent.setStatus("done");
 
                                 messageSentToClient = gson.toJson(messageSent);
-//                                System.err.println("msg json is in connection handler " + messageSentToClient);
                                 printStream.println(messageSentToClient);
-//                                System.out.println("logout successed");
 
                             } else {
-                                // in case he did not log out 
                                 messageSent = new Message();
                                 messageSent.setOperation("logout");
                                 messageSent.setStatus("wrong");
 
                                 messageSentToClient = gson.toJson(messageSent);
 
-//                                System.out.println("msg json is " + messageSentToClient);
                                 printStream.println(messageSentToClient);
-//                                System.out.println("logout failed");
 
                             }
 
