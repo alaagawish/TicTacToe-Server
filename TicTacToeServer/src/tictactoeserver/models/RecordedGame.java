@@ -1,7 +1,7 @@
-
 package tictactoeserver.models;
 
 public class RecordedGame {
+
     private int recordId;
     private String recordName;
     private int playerId;
@@ -37,6 +37,5 @@ public class RecordedGame {
     public String toString() {
         return "RecordedGame{" + "recordId=" + recordId + ", recordName=" + recordName + ", playerId=" + playerId + '}';
     }
-    
-    
+
 }

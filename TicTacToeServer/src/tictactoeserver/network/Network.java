@@ -21,13 +21,12 @@ public class Network extends Thread {
 
     public void close() {
         try {
-            stop();
-            if (ConnectionHandler.clientsVector.size() != 0) {
-                connectionHandler.closeConnection();
 
+            if (!ConnectionHandler.clientsVector.isEmpty()) {
+                connectionHandler.closeConnection();
             }
+            stop();
             serverSocket.close();
-//            socket.close();
         } catch (IOException ex) {
             System.err.println(ex);
         }

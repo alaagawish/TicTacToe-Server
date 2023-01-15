@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -24,19 +25,20 @@ public class HomeScreenBase extends AnchorPane {
     protected static int offlineNumber;
     protected static int onlineNumber;
     protected final Button startButton;
-    protected PieChart pieChart;
-    protected Label percentageLabel;
-    private boolean flag;
+    public static boolean flag;
     public static Network network;
     private Thread thread;
     private final PlayerRepository playerRepository;
     protected ObservableList<PieChart.Data> pieChartList;
+    protected PieChart pieChart;
+    protected Label percentageLabel;
 
     public HomeScreenBase(Stage stage) {
         playerRepository = new PlayerRepository();
         startButton = new Button();
         percentageLabel = new Label();
         flag = false;
+        percentageLabel = new Label();
         setId("AnchorPane");
         setPrefHeight(800.0);
         setPrefWidth(1280.0);
@@ -97,7 +99,9 @@ public class HomeScreenBase extends AnchorPane {
             @Override
             public void handle(WindowEvent event) {
                 System.out.println("from set onClose request and stop the network");
-                thread.stop();
+                if (thread != null) {
+                    thread.stop();
+                }
                 System.out.println("The network.close executed");
             }
         });

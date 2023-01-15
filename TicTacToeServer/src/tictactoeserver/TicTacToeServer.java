@@ -28,7 +28,9 @@ public class TicTacToeServer extends Application {
 
     @Override
     public void stop() {
-        HomeScreenBase.network.close();
+        if (HomeScreenBase.flag) {
+            HomeScreenBase.network.close();
+        }
     }
 
     public static void main(String[] args) throws IOException {
