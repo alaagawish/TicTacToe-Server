@@ -3,6 +3,7 @@ package tictactoeserver.screens.home;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.binding.Binding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -43,18 +44,19 @@ public class HomeScreenBase extends AnchorPane {
         setPrefWidth(1280.0);
         setStyle("-fx-background-color: linear-gradient(#ffffff,#E5EDEE);;");
 
-        startButton.setLayoutX(540.0);
-        startButton.setLayoutY(35.0);
-        startButton.setMnemonicParsing(false);
-        startButton.setPrefHeight(100.0);
-        startButton.setPrefWidth(200.0);
-        startButton.setStyle("-fx-background-color: rgba(130,213,49,0.7); -fx-background-radius: 40; -fx-effect: dropshadow( one-pass-box  , #BFBFC3 , 10 ,0.3 , -4, 4 );");
-        startButton.setText("Start");
-        startButton.setTextFill(javafx.scene.paint.Color.valueOf("#f8f8f8"));
-        startButton.setFont(new Font("Comic Sans MS Bold", 45.0));
+        saveButton.setLayoutX(540.0);
+        saveButton.setLayoutY(35.0);
+        saveButton.setMnemonicParsing(false);
+        saveButton.setPrefHeight(100.0);
+        saveButton.setPrefWidth(200.0);
+        saveButton.setStyle("-fx-background-color: rgba(130,213,49,0.7); -fx-background-radius: 40; -fx-effect: dropshadow( one-pass-box  , #BFBFC3 , 10 ,0.3 , -4, 4 );");
+        saveButton.setText("Start");
+        saveButton.setTextFill(javafx.scene.paint.Color.valueOf("#f8f8f8"));
+        saveButton.setFont(new Font("Comic Sans MS Bold", 45.0));
 
-        pieChart = new PieChart();
-
+        ObservableList<PieChart.Data> pieChartList = initPieChartData();
+        pieChart = new PieChart(pieChartList);
+        Label percentageLabel = showPercentage(pieChart);
         pieChart.setLayoutX(298.0);
         pieChart.setLayoutY(147.0);
         pieChart.setPrefHeight(619.0);
