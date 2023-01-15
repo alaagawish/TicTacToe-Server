@@ -101,29 +101,83 @@ public class PlayerRepository {
 
     }
 
+    public synchronized int selectOnline() {
+        PreparedStatement ps;
+        ResultSet rs;
+        String query = "select count(status) from player where status='available' or status  ='online'";
+        int onlineNumber = 0;
+        try {
+            ps = repository.connection.prepareStatement(query,
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                onlineNumber = rs.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getLocalizedMessage());
+            ex.printStackTrace();
+        }
+
+        return onlineNumber;
+    }
+
+    public synchronized int selectOffline() {
+
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        String query = "select count(status) from player where status='offline'";
+        int offlineNumber = 0;
+        try {
+            preparedStatement = repository.connection.prepareStatement(query,
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                offlineNumber = resultSet.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getLocalizedMessage());
+            ex.printStackTrace();
+        }
+
+        return offlineNumber;
+
+    }
+
     public synchronized Player login(String username, String password) {
         Player player = new Player();
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         String pw = "";
         int resultFromUpdate;
+        String query = "select * from ROOT.PLAYER where PLAYERNAME=? and PASSWORD=?";
         try {
-            preparedStatement = repository.connection.prepareStatement("select * from ROOT.PLAYER where PLAYERNAME=?",
+            preparedStatement = repository.connection.prepareStatement(query,
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
             preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
             resultSet = preparedStatement.executeQuery();
-            System.out.println("resultset result: " + resultSet);
-            if (resultSet.next()) {
+
+            if (resultSet != null) {
+                resultSet.next();
+            }
+            pw = resultSet.getString("PASSWORD");
+
+            if (pw.equals(password)) {
                 resultFromUpdate = updateStatusOnline(username);
-                pw = resultSet.getString(5);
                 System.out.println("password: " + pw);
+                System.out.println("Status: " + resultSet.getString("STATUS"));
                 System.out.println("result from Update " + resultFromUpdate + "");
                 player.setId(resultSet.getInt("ID"));
                 player.setUsername(resultSet.getString("PLAYERNAME"));
                 player.setScore(resultSet.getInt("SCORE"));
                 player.setPassword(resultSet.getString("PASSWORD"));
                 player.setStatus(resultSet.getString("STATUS"));
+                player.setIpAddress(resultSet.getString("IPADDRESS"));
             }
 
         } catch (SQLException ex) {
@@ -223,52 +277,6 @@ public class PlayerRepository {
         }
         return players;
 
-    }
-
-    public synchronized int selectOffline() {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-        String query = "select count(status) from player where status='offline'";
-        int offlineNumber = 0;
-        try {
-            preparedStatement = repository.connection.prepareStatement(query,
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_READ_ONLY);
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                offlineNumber = resultSet.getInt(1);
-            }
-
-        } catch (SQLException ex) {
-            System.out.println(ex.getLocalizedMessage());
-            ex.printStackTrace();
-        }
-
-        return offlineNumber;
-
-    }
-
-    public synchronized int selectOnline() {
-        PreparedStatement ps;
-        ResultSet rs;
-        String query = "select count(status) from player where status='available' or status  ='online'";
-        int onlineNumber = 0;
-        try {
-            ps = repository.connection.prepareStatement(query,
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_READ_ONLY);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                onlineNumber = rs.getInt(1);
-            }
-
-        } catch (SQLException ex) {
-            System.out.println(ex.getLocalizedMessage());
-            ex.printStackTrace();
-        }
-
-        return onlineNumber;
     }
 
 }
