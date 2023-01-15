@@ -22,6 +22,8 @@ import tictactoeserver.repository.PlayerRepository;
 
 public class HomeScreenBase extends AnchorPane {
 
+    protected static int offlineNumber;
+    protected static int onlineNumber;
     protected final Button startButton;
     public static boolean flag;
     public static Network network;
@@ -30,12 +32,11 @@ public class HomeScreenBase extends AnchorPane {
     protected ObservableList<PieChart.Data> pieChartList;
     protected PieChart pieChart;
     protected Label percentageLabel;
-    protected static int offlineNumber;
-    protected static int onlineNumber;
 
     public HomeScreenBase(Stage stage) {
         playerRepository = new PlayerRepository();
         startButton = new Button();
+        percentageLabel = new Label();
         flag = false;
         percentageLabel = new Label();
         setId("AnchorPane");
@@ -68,7 +69,6 @@ public class HomeScreenBase extends AnchorPane {
 
         getChildren().addAll(startButton, pieChart, percentageLabel);
         pieChart.setVisible(false);
-
         startButton.setOnAction(e -> {
             if (!flag) {
                 onlineNumber = playerRepository.selectOnline();
@@ -119,7 +119,7 @@ public class HomeScreenBase extends AnchorPane {
     }
 
     private Label showPercentage(PieChart pc) {
-        final Label caption = new Label("");
+        Label caption = new Label("");
         caption.setTextFill(Color.BLACK);
         caption.setFont(new Font("Comic Sans MS", 50.0));
 
@@ -181,5 +181,4 @@ public class HomeScreenBase extends AnchorPane {
             thread.start();
         }
     }
-
 }

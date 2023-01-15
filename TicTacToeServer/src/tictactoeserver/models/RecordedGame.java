@@ -2,9 +2,9 @@ package tictactoeserver.models;
 
 public class RecordedGame {
 
-    int recordId;
-    String recordName;
-    int playerId;
+    private int recordId;
+    private String recordName;
+    private int playerId;
 
     public RecordedGame() {
     }
